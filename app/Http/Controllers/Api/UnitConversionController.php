@@ -10,44 +10,56 @@ use App\Http\Requests\UnitConversion\CreateUnitConversionRequest;
 use App\Http\Requests\UnitConversion\UpdateUnitConversionRequest;
 use App\Models\Unit;
 use App\Policies\UnitPolicy;
+use App\Http\Requests\UnitConversion\ViewUnitConversionRequest;
 
 class UnitConversionController extends Controller
 {
    public function __construct(private UnitConversionServiceInterface $unitConversionService){}
 
-     public function ViewUnitConversions(){
-          $this->authorize('viewAny', Unit::class);
+   public function ViewUnitConversions(){
+      $this->authorize('viewAny', Unit::class);
 
-          return UnitConversionResource::collection($this->unitConversionService->ViewConversions());
-     }
+      return UnitConversionResource::collection($this->unitConversionService->ViewConversions());
+   }
 
-     public function ViewConversion(int $id){
-        $this->authorize('view', Unit::class);
+   public function ViewConversion(int $id){
+      $this->authorize('view', Unit::class);
 
-        return new UnitConversionResource($this->unitConversionService->ViewConversion($id));
-     }
+      return new UnitConversionResource($this->unitConversionService->ViewConversion($id));
+   }
 
-     public function CreateConversion(CreateUnitConversionRequest $request){
-        $this->authorize('create', Unit::class);
+   public function ViewConversionByUnits(ViewUnitConversionRequest $request){
+      $this->authorize('view', Unit::class);
 
-        return new UnitConversionResource($this->unitConversionService->CreateConversion($request->validated()));
-     }
+      $requestValidated=$request->validated();
 
-     public function UpdateConversion(UpdateUnitConversionRequest $request, int $id){
-        $this->authorize('update', Unit::class); 
+      $fromUnitId=$requestValidated['from_unit_id'];
+      $toUnitId=$requestValidated['to_unit_id'];
 
-        return new UnitConversionResource($this->unitConversionService->UpdateConversion($id, $request->validated()));
-     }
+      return new UnitConversionResource($this->unitConversionService->FindConversionByUnits($fromUnitId, $toUnitId));
+   }
 
-     public function DeleteUnitConversion(int $id){
-        $this->authorize('delete', Unit::class);
+   public function CreateConversion(CreateUnitConversionRequest $request){
+      $this->authorize('create', Unit::class);
 
-        $this->unitConversionService->DeleteConversion($id);
+      return new UnitConversionResource($this->unitConversionService->CreateConversion($request->validated()));
+   }
 
-        return response()->json([
-            'message' => 'Unit conversion deleted'
-          ]);
-     }
+   public function UpdateConversion(UpdateUnitConversionRequest $request, int $id){
+      $this->authorize('update', Unit::class); 
+
+      return new UnitConversionResource($this->unitConversionService->UpdateConversion($id, $request->validated()));
+   }
+
+   public function DeleteUnitConversion(int $id){
+      $this->authorize('delete', Unit::class);
+
+      $this->unitConversionService->DeleteConversion($id);
+
+      return response()->json([
+         'message' => 'Unit conversion deleted'
+      ]);
+   }
    
    
 }

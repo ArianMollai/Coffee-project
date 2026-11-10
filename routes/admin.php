@@ -50,6 +50,7 @@ Route::middleware('jwt')->group(function (){
     Route::delete('/admin/units/delete/{unit_id}', [UnitController::class, 'destroy']);
 
     Route::get('/unit/conversions', [UnitConversionController::class, 'ViewUnitConversions']);
+    Route::get('/unit/conversions/byunit', [UnitConversionController::class, 'ViewConversionByUnits']);
     Route::get('/unit/conversions/{unitconversion_id}', [UnitConversionController::class, 'ViewConversion']);
     Route::post('/unit/conversions/create', [UnitConversionController::class, 'CreateConversion']);
     Route::put('/unit/conversions/update/{unitconversion_id}', [UnitConversionController::class, 'UpdateConversion']);
