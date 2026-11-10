@@ -36,57 +36,43 @@ class RoleService implements RoleServiceInterface
 
     public function create(array $data): Role
     {
-        $role=$this->roleRepository->Create($data) ?? throw new Exception("Couldnt create role");
+        $permissionIds=$data['permissions'] ?? [];
 
-        if(isset($data['permissions'])){
-            $this->roleRepository->SyncPermisssions($role, $data['permissions']);
-        }
+        return DB::transaction(function() use($data, $permissionIds){
+            $role=$this->roleRepository->Create($data) ?? throw new Exception("Couldnt create role");
 
-        if( isset($data['users'])){
-            $this->roleRepository->SyncUsers($role, $data['users']);
-
-            foreach($data['users'] as $userId){
-                $this->userService->UpdateUserLevel($userId);
+            if(array_key_exists('permissions', $data)){
+                $this->roleRepository->SyncPermisssions($role, $permissionIds);
             }
-        }
 
-        return $role->load(['Permissions', 'Users']);
+            return $role->load(['Permissions']);
+        });
     }
 
     public function update(int $id, array $data): Role
     {
-        $role= $this->roleRepository->get($id) ?? throw new Exception("Role not found");
+        $role = $this->roleRepository->get($id) ?? throw new Exception("Role not found");
 
-        if(isset($data['users'])){
-            $this->roleRepository->SyncUsers($role, $data['users']);
+        $permissionIds=$data['permissions'] ?? [];
 
-            foreach($data['users'] as $userId){
-                $this->userService->UpdateUserLevel($userId);
+        return DB::transaction(function () use ($role, $data, $permissionIds){
+            $updatedRole = $this->roleRepository->update($role, $data);
+
+            if(array_key_exists('permissions', $data)){
+                $this->roleRepository->SyncPermisssions($role, $permissionIds);
             }
-        }
 
-        $this->roleRepository->SyncPermisssions($role, $data['permissions']);
-
-        $updatedRole = $this->roleRepository->update($role, $data);
-
-        return $updatedRole->load(['Permissions', 'Users']);
+            return $updatedRole->load('Permissions');
+        });
     }
 
 
     public function delete(int $id): bool
     {
-        return DB::transaction(function () use($id){
-            $role=$this->roleRepository->get($id) ?? throw new Exception("Role not found");
+        $role=$this->roleRepository->get($id) ?? throw new Exception("Role not found");
 
-            $users=$role->Users;
+        $deleted = $this->roleRepository->delete($role) ?? throw new Exception("Couldn't delete role");
 
-            $deleted = $this->roleRepository->delete($role) ?? throw new Exception("Couldn't delete role");
-
-            foreach($users as $user){
-                $this->userService->UpdateUserLevel($user->id);
-            }
-
-            return $deleted;
-        });
+        return $deleted;
     }
 }

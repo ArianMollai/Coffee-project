@@ -26,9 +26,7 @@ class RoleCreateRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'min:3', Rule::unique('roles')],
             'permissions'   => ['sometimes', 'array'],
-            'permissions.*' => ['integer', 'exists:permissions,id'],
-            'users' => ['sometimes', 'array'],
-            'users.*' => ['integer', 'exists:users,id']
+            'permissions.*' => ['integer', 'exists:permissions,id']
         ];
     }
 }
