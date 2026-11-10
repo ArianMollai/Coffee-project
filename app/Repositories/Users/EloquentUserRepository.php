@@ -38,4 +38,8 @@ class EloquentUserRepository implements UserRepository
     public function SyncRoles(User $user, array $roleIds){
         return $user->Roles()->sync($roleIds);
     }
+
+    public function GetRoles(User $user){
+        return $user->Roles()->pluc('role_id')->toArray();
+    }
 }   

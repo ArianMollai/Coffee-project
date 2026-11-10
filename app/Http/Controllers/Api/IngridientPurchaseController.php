@@ -38,7 +38,7 @@ class IngridientPurchaseController extends Controller
     {
         $this->authorize('update', Ingridient::class);
 
-        return new IngridientPurchaseResource($this->ingridientPurchaseService->UpdateIngridientPurchase($request->validated()));
+        return new IngridientPurchaseResource($this->ingridientPurchaseService->UpdateIngridientPurchase($ingridientPurchaseId, $request->validated()));
     }
 
     public function DeleteIngridientPurchase(int $ingridientPurchaseId){

@@ -30,8 +30,9 @@ class CreateNewUserRequest extends FormRequest
             'email' => ['required', 'email', Rule::unique('users')],
             'phone_number' => ['required', 'regex:/^(09\d{9}|\+98\d{9})$/', Rule::unique('users')],
             'password' => ['required', 'confirmed', Password::min(6)->letters()->numbers()],
+            'level' => ['required', 'string'],
             'role_ids' => ['sometimes', 'array'],
-            'role_ids.*' => ['integer', 'exists:roles,id']
+            'role_ids.*' => ['integer', 'exists:roles,id', 'nullable']
         ];
     }
 }

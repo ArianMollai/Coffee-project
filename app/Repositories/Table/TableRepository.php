@@ -13,30 +13,35 @@ class TableRepository implements TableRepositoryInterface
      */
     public function __construct(){}
 
-        public function viewTables(): Collection
-        {
-            return Table::with("Prices")->latest()->get();
-        }
+    public function viewTables(): Collection
+    {
+        return Table::with("Prices")->latest()->get();
+    }
 
-        public function ViewTable(int $id): ?Table
-        {
-            return Table::with('Prices')->findOrFail($id);
-        }
+    public function ViewTable(int $id): ?Table
+    {
+        return Table::with('Prices')->findOrFail($id);
+    }
 
-        public function CreateTable(array $data): Table
-        {
-            return Table::create($data);
-        }
+    public function CreateTable(array $data): Table
+    {
+        return Table::create($data);
+    }
 
-        public function UpdateTable(Table $table, array $data): Table
-        {
-            $table->update($data);
+    public function UpdateTable(Table $table, array $data): Table
+    {
+        $table->update($data);
 
-            return $table;
-        }
+        return $table;
+    }
 
-        public function DeleteTable(Table $table)
-        {
-            return $table->delete();
-        }
+    public function DeleteTable(Table $table)
+    {
+        return $table->delete();
+    }
+
+    public function FindTablePrice(Table $table)
+    {
+        return $table->Prices;
+    }
 }

@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
 use Tymon\JWTAuth\Facades\JWTAuth; 
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class UserServices implements UserServiceInterface
 {
@@ -36,11 +38,23 @@ class UserServices implements UserServiceInterface
     {
         $user=$this->get($id) ?? throw new ModelNotFoundException('User not found');
 
-        $roleIds=$data['role_ids'] ?? [];
+        $level=$data['level'] ?? $user->level;
 
-        $data['level'] = !empty($roleIds) ? 'admin' : 'user';
+        $roleIds=$data['role_ids'] ?? $this->user->GetRoles($user);
 
-        return $this->user->update($user, $data);
+        if($level==="user" && count($roleIds) > 0){
+            throw new Exception("A user cant have roles");
+        }
+
+        return DB::transaction(function () use($user, $data){
+            $updatedUser=$this->user->update($user, $data);
+
+            if(array_key_exists('role_ids', $data)){
+                $this->user->SyncRoles($user, $data['role_ids']);
+            }
+
+            return $updatedUser->load('Roles');
+        });
     }
 
     public function delete(int $id): void
@@ -52,25 +66,32 @@ class UserServices implements UserServiceInterface
     {
         $data['password'] = bcrypt($data['password']);
 
+        $level=$data['level'];
+
         $roleIds= $data['role_ids'] ?? [];
 
-        $data['level'] = !empty($roleIds) ? 'admin' : 'user';
+        if($level=== "user" && count($roleIds) > 0){
+            throw new Exception("user cant have roles");
+        }
 
-        $user=$this->Create($data);
+        return DB::transaction(function () use($data){
+            $user=$this->Create($data);
 
-        $this->user->SyncRoles($user, $data['role_ids']);
+            if(array_key_exists('role_ids', $data)){
+                $this->user->SyncRoles($user, $data['role_ids']);
+            }
 
-        return $user->load('Roles');
+            return $user->load('Roles');
+        });
     }
 
     public function UpdateUserLevel(int $userId){
-        $user=$this->user->find($userId) ?? throw new ModelNotFoundException('User not found');
+        $user=$this->get($userId) ?? throw new ModelNotFoundException('User not found');
 
         $level=$user->Roles()->exists() ? 'admin' : 'user';
 
         return $this->user->update($user, ['level' => $level]);
 
     }
-
 }
 

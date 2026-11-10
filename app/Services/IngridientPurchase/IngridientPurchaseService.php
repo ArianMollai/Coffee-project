@@ -56,7 +56,7 @@ class IngridientPurchaseService implements IngridientPurchaseServiceInterface
     {
         $ingridientPurchase=$this->ViewIngridientPurchase($ingridientPurchaseId) ?? throw new ModelNotFoundException("No ingridient purchase Found");
 
-        $ingridientPurchase->ingridientPurchaseRepository($data);
+        $this->ingridientPurchaseRepository->UpdateIngridientPurchase($ingridientPurchase, $data);
 
         return $ingridientPurchase;
     }

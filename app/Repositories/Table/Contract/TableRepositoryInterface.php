@@ -12,4 +12,5 @@ interface TableRepositoryInterface
     public function CreateTable(array $data): Table;
     public function UpdateTable(Table $table, array $data): ?Table;
     public function DeleteTable(Table $table);
+    public function FindTablePrice(Table $tableId);
 }

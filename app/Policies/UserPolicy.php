@@ -60,6 +60,10 @@ class UserPolicy
             return false;
         }
 
+        if($user->id === $model->id){
+            return true;
+        }
+
         if($user->level==='creator'){
             return true;
         }

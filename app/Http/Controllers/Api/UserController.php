@@ -49,7 +49,7 @@ class UserController extends Controller
 
         Gate::authorize('update', $user);
 
-        if(isset($request['role_ids'])){
+        if(array_key_exists('role_ids', $requestValidated)){
             $this->authorize('AssignRoles', $user, Role::class);
         }
 
@@ -78,7 +78,9 @@ class UserController extends Controller
     public function CreateNewUser(CreateNewUserRequest $request){
         Gate::authorize('create', User::class);
 
-        if(isset($request['role_ids'])){
+        $requestValidated=$request->validated();
+
+        if(array_key_exists('role_ids', $requestValidated)){
             Gate::authorize('AssignRoles', Role::class);
         }
 

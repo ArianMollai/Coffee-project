@@ -121,7 +121,7 @@ class ProductService implements ProductServiceInterface
                         $price->AttributeValues()->sync($priceData['attribute_value_ids']);
 
                         $ingridients=[];
-
+ 
                         foreach($priceData['ingridients'] as $ingridientData){
                             $ingridient[$ingridientData['ingridient_id']]=[
                                 'unit_id' => $ingridient['unit_id'],

@@ -66,4 +66,10 @@ class TableService implements TableServiceInterface
 
         return $this->tableRepository->DeleteTable($table);
     }
+
+    public function FindTablePrice(int $tableId){
+        $table=$this->ViewTable($tableId) ?? throw new ModelNotFoundException("Table not found");
+
+        return $this->tableRepository->FindTablePrice($table);
+    }
 }
