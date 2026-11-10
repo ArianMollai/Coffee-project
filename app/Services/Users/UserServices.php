@@ -45,7 +45,7 @@ class UserServices implements UserServiceInterface
         if($level==="user" && count($roleIds) > 0){
             throw new Exception("A user cant have roles");
         }
-
+        
         return DB::transaction(function () use($user, $data){
             $updatedUser=$this->user->update($user, $data);
 
@@ -91,7 +91,6 @@ class UserServices implements UserServiceInterface
         $level=$user->Roles()->exists() ? 'admin' : 'user';
 
         return $this->user->update($user, ['level' => $level]);
-
     }
 }
 
