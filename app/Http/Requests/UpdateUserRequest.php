@@ -31,6 +31,7 @@ class UpdateUserRequest extends FormRequest
             'last_name' => ['required', 'string', 'min:3'],
             'email' => ['required', 'email', Rule::unique('users')->ignore($id)],
             'phone_number' => ['required', 'regex:/^(09\d{9}|\+98\d{9})$/', Rule::unique('users')->ignore($id)],
+            'level' => ['required', 'string'],
             'role_ids' => ['sometimes', 'array'],
             'role_ids.*' => ['integer', 'exists:roles,id']
         ];

@@ -30,6 +30,7 @@ class UpdatedProductRequest extends FormRequest
             'description' => ['nullable', 'string'],
 
             'prices' => ['required', 'array', 'min:1'],
+            'prices.*.id' => ['required', 'integer', 'exists:prices,id'],
             'prices.*.price' => ['required', 'numeric', 'min:0'],
             'prices.*.discount' => ['sometimes', 'numeric', 'min:0'],
             'prices.*.inventory' => ['required', 'integer', 'min:0'],

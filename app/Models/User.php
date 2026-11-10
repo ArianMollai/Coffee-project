@@ -12,6 +12,7 @@ use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\Role;
 use App\Models\Cart;
+use App\Models\Reservation;
 
 
 #[Guarded(['id'])]
@@ -54,5 +55,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function Cart(){
         return $this->hasOne(Cart::class, 'user_id');
+    }
+
+    public function Reservations(){
+        return $this->hasMany(Reservation::class, 'user_id');
     }
 }

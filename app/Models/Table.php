@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\Price;
+use App\Models\Reservation;
 
 class Table extends Model
 {
@@ -34,5 +35,9 @@ class Table extends Model
 
     public function Prices(){
         return $this->hasOne(Price::class);
+    }
+
+    public function Reservations(){
+        return $this->hasMany(Reservation::class, 'table_id');
     }
 }

@@ -34,8 +34,7 @@ class AuthenticationService implements AuthenticationServiceInterface
             $payload=$jwt->getPayload();
             $user=$jwt->authenticate();
         }catch(JWTException $e){
-            //throw new AuthenticationException('Invalid or expired token 2.');
-            dd($e);
+            throw new AuthenticationException('Invalid or expired token 2.');
         }
 
         if(! $user || $payload->get('type') !== $expectedType){

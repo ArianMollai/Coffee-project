@@ -9,5 +9,6 @@ interface UserReader
 {
     public function all(): collection;
     public function find(int $id): ?User;
+    public function GetRoles(User $user);
     
 }

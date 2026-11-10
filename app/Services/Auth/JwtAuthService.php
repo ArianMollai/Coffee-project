@@ -56,8 +56,6 @@ class JwtAuthService implements AuthServiceInterface
             return null;
         }
 
-        
-
         return JWTAuth::user();
     }
 

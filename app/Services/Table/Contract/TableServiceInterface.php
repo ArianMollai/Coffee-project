@@ -12,4 +12,5 @@ interface TableServiceInterface
     public function CreateTable(array $tableData): Table;
     public function UpdateTable(int $id, array $data): ?Table;
     public function DeleteTable(int $id);
+    public function FindTablePrice(int $tableId);
 }
