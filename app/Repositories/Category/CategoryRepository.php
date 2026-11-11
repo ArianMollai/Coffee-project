@@ -17,12 +17,12 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     public function Index(): Collection
     {
-        return Category::with(['Children', 'Products'])->latest()->get();
+        return Category::with('Children')->whereNull('parent_id')->latest()->get();
     }
 
     public function ViewOne(int $id): ?Category
     {
-        return Category::with(['Children', 'Products'])->findOrFail($id);
+        return Category::with('Children')->findOrFail($id);
     }
 
     public function Create(array $data): Category
