@@ -34,8 +34,7 @@ class AuthController extends Controller
 
        $tokens=$this->authService->Login($validated['credential'], $validated['password'], ['user']);
 
-       return response()->json(['message' => 'wellcome in'])->cookie('access_token', $tokens['access_token'], 15, '/', null, false, true, false, 'Lax')->cookie('refresh_token', $tokens['refresh_token'],  60 * 24 * 7, '/', null, false, true, false, 'Lax');
-
+       return response()->json(['message' => 'wellcome in'])->cookie('access_token', $tokens['access_token'], 15, '/', null, true, true, false, 'Lax')->cookie('refresh_token', $tokens['refresh_token'],  60 * 24 * 7, '/', null, true, true, false, 'Lax');
     }
 
     
@@ -44,7 +43,7 @@ class AuthController extends Controller
 
         $tokens=$this->authService->login($validated['credential'], $validated['password'], ['admin', 'creator']);
 
-        return response()->json(['message' => 'wellcome in'])->cookie('access_token', $tokens['access_token'], 15, '/', null, false, true, false, 'Lax')->cookie('refresh_token', $tokens['refresh_token'],  60 * 24 * 7, '/', null, false, true, false, 'Lax');
+        return response()->json(['message' => 'wellcome in'])->cookie('access_token', $tokens['access_token'], 15, '/', null, true, true, false, 'Lax')->cookie('refresh_token', $tokens['refresh_token'],  60 * 24 * 7, '/', null, true, true, false, 'Lax');
     }
 
     public function Logout(Request $request){

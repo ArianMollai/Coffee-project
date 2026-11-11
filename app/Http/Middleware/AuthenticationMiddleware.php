@@ -43,7 +43,7 @@ class AuthenticationMiddleware
 
         $response=$next($request);
 
-        $response->headers->setCookie(cookie('access_token', $result['access_token'],  15, '/', null, false, true, false, 'Lax'));
+        $response->headers->setCookie(cookie('access_token', $result['access_token'],  15, '/', null, true, true, false, 'Lax'));
 
         return $response;
     }
