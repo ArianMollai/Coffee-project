@@ -13,7 +13,7 @@ use App\Http\Controllers\Api\IngridientPurchaseController;
 use App\Http\Controllers\Api\ExtraController;
 use App\Http\Controllers\Api\ProductController;
 
-Route::middleware('jwt')->group(function (){
+Route::middleware(['jwt', 'throttle:api'])->group(function (){
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::post('/admin/roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::get('/admin/roles/{id}', [RoleController::class, 'show'])->name('roles.show');

@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Auth\Contracts\AuthServiceInterface;
@@ -127,5 +130,13 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'product' => \App\Models\Product::class
         ]);
+
+        RateLimiter::for('api', function (Request $request){
+            return Limit::perMinute(60)->by($request->ip());
+        });
+
+        RateLimiter::for('login' , function(Request $request){
+            return Limit::perMinute(5)->by(strtolower($request->input('credential'). '|' .$request->ip()));
+        });
     }
 }
