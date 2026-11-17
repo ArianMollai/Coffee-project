@@ -27,7 +27,8 @@ class CreateProductRequest extends FormRequest
             'name' => ['required', 'string', 'max:256', Rule::unique('products')],
             'description' => ['nullable', 'string'],
 
-            'categories' => ['required', 'exists:categories,id'],
+            'categories' => ['required', 'array'],
+            'categories.*' => ['required', 'integer', 'exists:categories,id'],
 
             'prices' => ['required', 'array', 'min:1'],
             'prices.*.price' => ['required', 'numeric', 'min:0'],

@@ -29,8 +29,11 @@ class UpdatedProductRequest extends FormRequest
             'name' => ['required', 'string', 'max:256', Rule::unique('products')->ignore($product_id)],
             'description' => ['nullable', 'string'],
 
+            'categories' => ['required', 'array'],
+            'categories.*' => ['required', 'integer', 'exists:categories,id'],
+
             'prices' => ['required', 'array', 'min:1'],
-            'prices.*.id' => ['required', 'integer', 'exists:prices,id'],
+            'prices.*.id' => ['nullable', 'integer', 'exists:prices,id'],
             'prices.*.price' => ['required', 'numeric', 'min:0'],
             'prices.*.discount' => ['sometimes', 'numeric', 'min:0'],
             'prices.*.inventory' => ['required', 'integer', 'min:0'],

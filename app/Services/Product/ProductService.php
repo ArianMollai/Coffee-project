@@ -124,8 +124,8 @@ class ProductService implements ProductServiceInterface
  
                         foreach($priceData['ingridients'] as $ingridientData){
                             $ingridients[$ingridientData['ingridient_id']]=[
-                                'unit_id' => $ingridient['unit_id'],
-                                'volume' => $ingridient['volume']
+                                'unit_id' => $ingridientData['unit_id'],
+                                'volume' => $ingridientData['volume']
                             ];
                         }
 
