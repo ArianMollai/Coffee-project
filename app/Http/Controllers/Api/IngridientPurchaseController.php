@@ -9,6 +9,7 @@ use App\Http\Resources\IngridientPurchaseResource;
 use App\Http\Requests\IngridientPurchase\CreateIngridientPurchaseRequest;
 use App\Models\Ingridient;
 use App\Policies\IngridientPolicy;
+use App\Http\Requests\IngridientPurchase\UpdateIngridientPurchase;
 
 
 class IngridientPurchaseController extends Controller
@@ -34,7 +35,7 @@ class IngridientPurchaseController extends Controller
         return new IngridientPurchaseResource($this->ingridientPurchaseService->CreateIngridientPurchase($ingridientId, $request->validated()));
     }
 
-    public function UpdateIngridientPurchase(int $ingridientPurchaseId, CreateIngridientPurchaseRequest $request)
+    public function UpdateIngridientPurchase(int $ingridientPurchaseId, UpdateIngridientPurchase $request)
     {
         $this->authorize('update', Ingridient::class);
 
