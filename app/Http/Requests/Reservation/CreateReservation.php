@@ -23,10 +23,8 @@ class CreateReservation extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id', 'min:0'],
             'table_id' => ['required', 'integer', 'exists:tables,id', 'min:0'],
-            'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now'],
-            'ends_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:starts_at'],
+            'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now']
         ];
     }
 }

@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Services\Table\Contract\TableServiceInterface;
 use App\Services\Reservation\contract\ReservationServiceInterface;
 use Exception;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Table;
 
 class ReservationService implements ReservationServiceInterface
 {
@@ -31,53 +34,59 @@ class ReservationService implements ReservationServiceInterface
         return $this->reserveRepository->ViewReservationById($reservationId) ?? throw new ModelNotFoundException("No reservation found");
     }
 
-    public function ViewReservationByUser(int $userId): ?Reservation
+    public function ViewReservationByUser(User $user): Collection
     {
-        return $this->reserveRepository->ViewReservationByUser($userId) ?? throw new ModelNotFoundException("No reservation found");
+        return $this->reserveRepository->ViewReservationByUser($user) ?? throw new ModelNotFoundException("No reservation found");
     }
 
-    public function ViewReservationByTable(int $tableId): ?Reservation
+    public function ViewReservationByTable(table $table): collection
     {
-        return $this->reserveRepository->ViewReservationByTable($tableId) ?? throw new ModelNotFoundException("No reservation found");
+        return $this->reserveRepository->ViewReservationByTable($table) ?? throw new ModelNotFoundException("No reservation found");
     }
 
-    public function createReservation(int $userId, array $data): ?Reservation
+    public function createReservation(array $data): ?Reservation
     {
-        if($this->reserveRepository->CheckTableIsAvailble($data['table_id'])){
+        $startsAt=Carbon::parse($data['starts_at']);
+        $endsAt=$startsAt->copy()->addMinutes(120);
+
+        if($this->reserveRepository->CheckTableIsAvailble($data['table_id'], $startsAt, $endsAt)){
             throw new Exception("Selected table is reserved");
         }
         
         $tablePrice=$this->tableService->FindTablePrice($data['table_id']) ?? throw new ModelNotFoundException("There is no price for this table");
 
         return $this->reserveRepository->CreateReservation([
-            'user_id' => $userId,
+            'user_id' => $data['user_id'],
             'table_id' => $data['table_id'],
-            'starts_at' => $data['starts_at'],
-            'ends_at' => $data['ends_at'],
+            'starts_at' => $startsAt,
+            'ends_at' => $endsAt,
             'payment_expires_at' => now()->addMInutes(30),
-            'prica' => $tablePrice
-        ]);
+            'status' => 'pending',
+            'price' => $tablePrice->final_price,
+        ])->load(['User', 'Table']);
     }
 
-    public function UpdateReservation(int $reservationId, array $data): ?Reservation
+    public function UpdateReservation(Reservation $reservation, array $data): ?Reservation
     {
-        $reservation=$this->reserveRepository->ViewReservationById($reservationId) ?? throw new ModelNotFoundException("There is no price for this table");
+        $startsAt=Carbon::parse($data['starts_at']);
+        $endsAt=$startsAt->copy()->addMInutes(120);
+        //$reservation=$this->reserveRepository->ViewReservationById($reservationId) ?? throw new ModelNotFoundException("There is no price for this table");
 
-        if($this->reserveRepository->CheckTableIsAvailble($data['table_id'])){
+        if($this->reserveRepository->CheckTableIsAvailble($data['table_id'], $startsAt, $endsAt, $reservation->id)){
             throw new Exception("Selected table is reserved");
         }
 
         return $this->reserveRepository->UpdateReservation($reservation, [
             'user_id' => $data['user_id'],
             'table_id' => $data['table_id'],
-            
-
-        ]);
+            'starts_at' => $startsAt,
+            'ends_at' => $endsAt,
+            'payment_expires_at' => $reservation->payment_expires_at,
+            'price' => $reservation->price
+        ])->load(['User', 'Table']);
     }
 
-    public function DeleteReservation(int $reservationId){
-        $reservation=$this->ViewReservationById($reservationId) ?? throw new ModelNotFoundException("There is no price for this table");
-
+    public function DeleteReservation(Reservation $reservation){
         return $this->reserveRepository->DeleteReservation($reservation);
     }
 }

@@ -72,8 +72,6 @@ class RolePolicy
         if($user->level==="creator"){
             return true;
         }
-
-        
     }
 
     /**

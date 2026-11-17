@@ -67,7 +67,14 @@ class PermissionSeeder extends Seeder
             ['name' => 'view-products', 'type' => 'products'],
             ['name' => 'create-products', 'type' => 'products'],
             ['name' => 'update-products', 'type' => 'products'],
-            ['name' => 'delete-products', 'type' => 'products']
+            ['name' => 'delete-products', 'type' => 'products'],
+
+            //-------------------------------------------------------
+
+            ['name' => 'view-reservations', 'type' => 'reservs'],
+            ['name' => 'create-reservations', 'type' => 'reserves'],
+            ['name' => 'update-reservations' , 'type' => 'reserves'],
+            ['name' => 'delete-reservations', 'type' => 'reserves'],
         ];
 
         foreach($permissions as $permission){

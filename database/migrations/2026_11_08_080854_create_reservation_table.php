@@ -19,7 +19,7 @@ return new class extends Migration
             $table->datetime('ends_at');
             $table->datetime('payment_expires_at');
             $table->enum('status', ['pending', 'confirmed', 'expired'])->default('pending');
-            $table->decimal('price', 12, 3);
+            $table->decimal('price', 12, 3)->default(0);
             $table->timestamps();
         });
     }

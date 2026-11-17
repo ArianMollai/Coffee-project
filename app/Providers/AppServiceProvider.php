@@ -76,6 +76,10 @@ use App\Repositories\Image\Contract\ImageRepositoryInterface;
 use App\Repositories\Image\ImageRepository;
 use App\Services\Users\Contracts\UserServiceInterface;
 use App\Services\Users\UserServices;
+use App\Repositories\Reservation\contract\ReservationRepositoryInterface;
+use App\Repositories\Reservation\ReservationRepository;
+use App\Services\Reservation\contract\ReservationServiceInterface;
+use App\Services\Reservation\ReservationService;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -117,7 +121,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ProductServiceInterface::class, ProductService::class);
         $this->app->bind(ImageServiceInterface::class, ImageService::class);
         $this->app->bind(ImageRepositoryInterface::class, ImageRepository::class);
-        
+        $this->app->bind(ReservationRepositoryInterface::class, ReservationRepository::class);
+        $this->app->bind(ReservationServiceInterface::class, ReservationService::class);
     }
 
     /**
