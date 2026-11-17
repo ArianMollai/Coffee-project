@@ -18,6 +18,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'create-users', 'type' => 'users'],
             ['name' => 'update-users', 'type' => 'users'],
             ['name' => 'delete-users', 'type' => 'users'],
+            ['name' => 'update-level', 'type' => 'users'],
 
             //------------------------------------------------
 

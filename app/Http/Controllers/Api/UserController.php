@@ -49,6 +49,10 @@ class UserController extends Controller
 
         Gate::authorize('update', $user);
 
+        if(isset($requestValidated['level'])){
+            $this->authorize('updateLevel', $user);
+        }
+
         if(array_key_exists('role_ids', $requestValidated)){
             $this->authorize('AssignRoles', $user, Role::class);
         }

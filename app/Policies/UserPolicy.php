@@ -115,4 +115,17 @@ class UserPolicy
     {
         return false;
     }
+
+    public function updateLevel(User $user, User $model): bool
+    {
+        if($model->level === "creator"){
+            return false;
+        }
+
+        if($user->level === "creator"){
+            return true;
+        }
+
+        return $user->hasPermission('update-level');
+    }
 }

@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Reservation\admin\ReservationController;
 use App\Models\Reservation;
 
-Route::middleware('jwt')->group(function(){
+Route::middleware(['jwt', 'throttle:api'])->group(function(){
     Route::get('/V1/admin/reservations', [ReservationController::class, 'adminViewReservations'])->middleware('can:adminviewAnyReservation,' .Reservation::class);
     Route::get('/V1/admin/reservations/{reservation}', [ReservationController::class, 'adminViewReservationById'])->middleware('can:adminviewReservation,' .Reservation::class);
     Route::get('/V1/admin/reservation/user/{user}', [ReservationController::class, 'adminViewReservationByUser'])->middleware('can:adminviewReservation,' .Reservation::class);
