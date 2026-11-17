@@ -6,6 +6,7 @@ use App\Repositories\IngridientPurchas\Contract\IngridientPurchaseInterface;
 use App\Models\IngridientPurchases;
 use Illuminate\Support\Collection;
 use App\Models\Ingridient;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Services\Ingridient\Contract\IngridientServiceInterface;
 use App\Services\UnitConversion\Contract\UnitConversionServiceInterface;
@@ -41,30 +42,48 @@ class IngridientPurchaseService implements IngridientPurchaseServiceInterface
     {
         $ingridient=$this->ingridientService->ViewIngridient($ingridientId) ?? throw new ModelNotFoundException("No ingridient Found");
 
-        $convert=$this->unitConversionService->Convert($data['quantity'], $data['unit_id'], $ingridient->base_unit_id);
+        return DB::transaction(function() use ($data, $ingridient){
+            $convert=$this->unitConversionService->Convert($data['quantity'], $data['unit_id'], $ingridient->base_unit_id);
 
-        $this->ingridientRepository->IncrementQuantity($ingridient, $convert);
+            $this->ingridientRepository->IncrementQuantity($ingridient, $convert);
 
-        return $this->ingridientPurchaseRepository->CreateIngridientPurchase([
-            'ingridient_id' => $ingridient->id,
-            'unit_id' => $data['unit_id'],
-            'quantity' => $data['quantity']
-        ]);
+            return $this->ingridientPurchaseRepository->CreateIngridientPurchase([
+                'ingridient_id' => $ingridient->id,
+                'unit_id' => $data['unit_id'],
+                'quantity' => $data['quantity']
+            ]);
+        });
     }
 
     public function UpdateIngridientPurchase(int $ingridientPurchaseId, array $data): ?IngridientPurchases
     {
         $ingridientPurchase=$this->ViewIngridientPurchase($ingridientPurchaseId) ?? throw new ModelNotFoundException("No ingridient purchase Found");
+        $ingridient=$this->ingridientService->ViewIngridient($ingridientPurchase->ingridient_id) ?? throw new ModelNotFoundException("No ingridient Found");
 
-        $this->ingridientPurchaseRepository->UpdateIngridientPurchase($ingridientPurchase, $data);
+        return DB::transaction(function () use($data, $ingridientPurchase, $ingridient){
+            $decreamentConvert=$this->unitConversionService->Convert($ingridientPurchase->quantity, $ingridientPurchase->unit_id, $ingridient->base_unit_id);
+            $this->ingridientRepository->DecrementQuantity($ingridient, $decreamentConvert);
 
-        return $ingridientPurchase;
+            $increamentConvert=$this->unitConversionService->Convert($data['quantity'], $data['unit_id'], $ingridient->base_unit_id);
+            $this->ingridientRepository->IncrementQuantity($ingridient, $increamentConvert);
+
+            $updatedIngridentPurchase=$this->ingridientPurchaseRepository->UpdateIngridientPurchase($ingridientPurchase, $data);
+
+            return $ingridientPurchase;
+        });
     }
 
     public function DeleteIngridientPurchase(int $ingridientPurchaseId)
     {
         $ingridientPurchase=$this->ViewIngridientPurchase($ingridientPurchaseId) ?? throw new ModelNotFoundException("No ingridient Found");
+        $ingridient=$this->ingridientService->ViewIngridient($ingridientPurchase->ingridient_id);
 
-        $this->ingridientPurchaseRepository->DeleteIngridientPurchase($ingridientPurchase);
+        return DB::transaction(function () use ($ingridientPurchase, $ingridient){
+            $convert=$this->unitConversionService->Convert($ingridientPurchase->quantity, $ingridientPurchase->unit_id, $ingridient->base_unit_id);
+
+            $this->ingridientRepository->DecrementQuantity($ingridient, $convert);
+
+            return $this->ingridientPurchaseRepository->DeleteIngridientPurchase($ingridientPurchase);
+        });
     }
 }
