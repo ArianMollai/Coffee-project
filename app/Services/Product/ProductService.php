@@ -123,7 +123,7 @@ class ProductService implements ProductServiceInterface
                         $ingridients=[];
  
                         foreach($priceData['ingridients'] as $ingridientData){
-                            $ingridient[$ingridientData['ingridient_id']]=[
+                            $ingridients[$ingridientData['ingridient_id']]=[
                                 'unit_id' => $ingridient['unit_id'],
                                 'volume' => $ingridient['volume']
                             ];

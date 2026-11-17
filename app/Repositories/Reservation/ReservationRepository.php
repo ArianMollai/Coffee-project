@@ -5,6 +5,8 @@ namespace App\Repositories\Reservation;
 use Illuminate\Support\Collection;
 use App\Models\Reservation;
 use App\Repositories\Reservation\contract\ReservationRepositoryInterface;
+use App\Models\User;
+use App\Models\Table;
 
 class ReservationRepository implements ReservationRepositoryInterface
 {
@@ -21,16 +23,17 @@ class ReservationRepository implements ReservationRepositoryInterface
 
     public function ViewReservationById(int $reserveId): ?Reservation
     {
-        return Reservation::where('id', $reserveId)->findOrFail();
+        return Reservation::with('User')->with('Table')->where('id', $reserveId)->findOrFail();
     }
 
-    public function ViewReservationByUser(int $userId): ?Reservation
+    public function ViewReservationByUser(User $user): Collection
     {
-        return Reservation::where('user_id', $userId)->findOrFail();
+        return $user->Reservations()->with('User')->with('Table')->get();
     }
 
-    public function ViewReservationByTable(int $tableId): ?Reservation{
-        return Reservation::where('table_id', $tableId)->findOrFail();
+    public function ViewReservationByTable(Table $table): Collection
+    {
+        return $table->Reservations()->with('User')->with('Table')->get();
     }
 
     public function CreateReservation(array $data): Reservation
@@ -50,13 +53,14 @@ class ReservationRepository implements ReservationRepositoryInterface
         return $reservation->delete();
     }
 
-    public function CheckTableIsAvailble(int $tableId, string $startsAt, string $endsAt)
+    public function CheckTableIsAvailble(int $tableId, string $startsAt, string $endsAt, int $ignoreReservationId=null)
     {
-        return Reservation::where('table_id', $tableId)->where(function ($query){
+        return Reservation::where('table_id', $tableId)->when($ignoreReservationId, function($query) use ($ignoreReservationId){
+            $query->where('id' , '!=' , $ignoreReservationId);
+        })->where(function ($query){
             $query->where('status', 'confirmed')->orWhere(function ($query){
                 $query->where('status', 'pending')->where('payment_expires_at', '>', now());
             });
         })->where('starts_at', '<', $endsAt)->where('ends_at', '>', $startsAt)->exists();
     }
-    
 }

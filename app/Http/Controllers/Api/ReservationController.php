@@ -7,17 +7,15 @@ use Illuminate\Http\Request;
 use App\Services\Reservation\contract\ReservationServiceInterface;
 use App\Http\Resources\ReservationResource;
 use App\Http\Requests\Reservation\CreateReservation;
+use App\Models\Reservation;
+use App\Http\Requests\Reservation\AdminCreateReservationRequest;
 
 class ReservationController extends Controller
 {
     public function __construct(private ReservationServiceInterface $reserveService){}
 
-    public function ViewReservations(){
-        return ReservationResource::collection($this->reserveService->ViewReservations());
-    }
-
-    public function ViewReservationById(int $reserveId){
-        return new ReservationResource($this->reserveService->ViewReservationById());
+    public function ViewReservation(Reservation $reservation){
+        return new ReservationResource($reservation);
     }
 
     public function ViewReservationByUser(int $userId){
@@ -36,12 +34,36 @@ class ReservationController extends Controller
         return new ReservationResource($this->reserveService->createReservation($data));
     }
 
-    public function UpdateReservation(int $reserveId, CreateReservation $request){
-        return new ReservationResource($this->reserveService->UpdateReservation($reserveId, $request->validated()));
+    public function UpdateReservation(Reservation $reservation, CreateReservation $request){
+        $data=$request->validated();
+
+        $data['user_id'] = auth()->id();
+
+        return new ReservationResource($this->reserveService->UpdateReservation($reservation, $data));
     }
 
-    public function DeleteReservation(int $reserveId){
-        $this->reserveService->DeleteReservation($reserveId);
+    public function DeleteReservation(Reservation $reservation){
+        $this->reserveService->DeleteReservation($reservation);
+
+        return response()->json([
+            'message' => 'Reservation deleted successfully'
+        ]);
+    }
+
+    public function adminCreateReservation(AdminCreateReservationRequest $request){
+        $validatedrequest=$request->validated();
+
+        return new ReservationResource($this->reserveService->createReservation($validatedrequest));
+    }
+
+    public function adminUpdateReservation(Reservation $reservation, AdminCreateReservationRequest $request){
+        $validatedRequest=$request->validated();
+
+        return new ReservationResource($this->reserveService->UpdateReservation($reservation, $validatedRequest));
+    }
+
+    public function adminDeleteReservation(Reservation $reservation){
+        $this->reserveService->DeleteReservation($reservation);
 
         return response()->json([
             'message' => 'Reservation deleted successfully'

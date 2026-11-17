@@ -23,3 +23,5 @@ Route::middleware(['guest.jwt', 'throttle:login'])->group(function (){
 });
 
 require __DIR__ . "/admin.php";
+require __DIR__ . "/V1/front/api.php";
+require __DIR__ . "/V1/back/api.php";
