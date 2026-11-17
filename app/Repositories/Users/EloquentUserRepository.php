@@ -40,6 +40,6 @@ class EloquentUserRepository implements UserRepository
     }
 
     public function GetRoles(User $user){
-        return $user->Roles()->pluc('role_id')->toArray();
+        return $user->Roles()->pluck('role_id')->toArray();
     }
 }   

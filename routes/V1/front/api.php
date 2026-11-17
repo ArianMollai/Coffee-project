@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Reservation\front\ReservationController;
 use App\Models\Reservation;
 
-Route::middleware('jwt')->group(function (){
+Route::middleware(['jwt', 'throttle:api'])->group(function (){
     Route::get('/V1/front/reservations/{reservation}', [ReservationController::class, 'ViewReservation'])->middleware('can:viewReservations,reservation,' .Reservation::class);
     Route::post('/V1/front/reservations/create', [ReservationController::class, 'CreateReservation'])->middleware('can:createReservation,' .Reservation::class);
     Route::put('/V1/front/reservations/update/{reservation}', [ReservationController::class, 'UpdateReservation'])->middleware('can:updateReservaation,reservation,' .Reservation::class);
