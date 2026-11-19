@@ -76,6 +76,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'create-reservations', 'type' => 'reserves'],
             ['name' => 'update-reservations' , 'type' => 'reserves'],
             ['name' => 'delete-reservations', 'type' => 'reserves'],
+            ['name' => 'complete-reservations', 'type' => 'reserves']
         ];
 
         foreach($permissions as $permission){

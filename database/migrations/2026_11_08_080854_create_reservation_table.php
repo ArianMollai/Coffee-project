@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('table_id')->constrained('tables')->cascadeOnDelete();
             $table->datetime('starts_at');
             $table->datetime('ends_at');
-            $table->datetime('payment_expires_at');
+            $table->datetime('payment_expires_at')->nullable();
             $table->enum('status', ['pending', 'confirmed', 'expired'])->default('pending');
             $table->decimal('price', 12, 3)->default(0);
             $table->timestamps();

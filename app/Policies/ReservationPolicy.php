@@ -65,6 +65,15 @@ class ReservationPolicy
         return $user->HasPermission('delete-reservations');
     }
 
+    public function adminCompleteReservation(User $user): bool
+    {
+        if($user->level=== "creator"){
+            return true;
+        }
+
+        return $user->HasPermission('complete-reservations');
+    }
+
     public function viewReservations(User $user, Reservation $reservation):bool
     {
         return $user->id === $reservation->user_id;
@@ -80,6 +89,11 @@ class ReservationPolicy
     }
 
     public function deleteReservation(User $user, Reservation $reservation){
+        return $user->id === $reservation->user_id;
+    }
+
+    public function completeReservation(User $user, Reservation $reservation): bool
+    {
         return $user->id === $reservation->user_id;
     }
 

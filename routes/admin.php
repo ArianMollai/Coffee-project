@@ -12,8 +12,11 @@ use App\Http\Controllers\Api\IngridientController;
 use App\Http\Controllers\Api\IngridientPurchaseController;
 use App\Http\Controllers\Api\ExtraController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\UserController;
 
 Route::middleware(['jwt', 'throttle:api'])->group(function (){
+    Route::post('/admin/users/create/user', [UserController::class, 'CreateNewUser']);
+
     Route::get('/admin/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::post('/admin/roles/create', [RoleController::class, 'create'])->name('roles.create');
     Route::get('/admin/roles/{id}', [RoleController::class, 'show'])->name('roles.show');
@@ -49,12 +52,12 @@ Route::middleware(['jwt', 'throttle:api'])->group(function (){
     Route::put('/admin/units/update/{unit_id}', [UnitController::class, 'update']);
     Route::delete('/admin/units/delete/{unit_id}', [UnitController::class, 'destroy']);
 
-    Route::get('/unit/conversions', [UnitConversionController::class, 'ViewUnitConversions']);
-    Route::get('/unit/conversions/byunit', [UnitConversionController::class, 'ViewConversionByUnits']);
-    Route::get('/unit/conversions/{unitconversion_id}', [UnitConversionController::class, 'ViewConversion']);
-    Route::post('/unit/conversions/create', [UnitConversionController::class, 'CreateConversion']);
-    Route::put('/unit/conversions/update/{unitconversion_id}', [UnitConversionController::class, 'UpdateConversion']);
-    Route::delete('/unit/conversions/delete/{unitconversion_id}', [UnitConversionController::class, 'DeleteUnitConversion']);
+    Route::get('/admin/unit/conversions', [UnitConversionController::class, 'ViewUnitConversions']);
+    Route::get('/admin/unit/conversions/byunit', [UnitConversionController::class, 'ViewConversionByUnits']);
+    Route::get('/admin/unit/conversions/{unitconversion_id}', [UnitConversionController::class, 'ViewConversion']);
+    Route::post('/admin/unit/conversions/create', [UnitConversionController::class, 'CreateConversion']);
+    Route::put('/admin/unit/conversions/update/{unitconversion_id}', [UnitConversionController::class, 'UpdateConversion']);
+    Route::delete('/admin/unit/conversions/delete/{unitconversion_id}', [UnitConversionController::class, 'DeleteUnitConversion']);
 
     Route::get('/admin/ingridients', [IngridientController::class, 'ViewIngridients']);
     Route::get('/admin/ingridients/{ingridient_id}', [IngridientController::class, 'ViewIngridient']);

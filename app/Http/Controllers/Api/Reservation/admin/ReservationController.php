@@ -11,6 +11,7 @@ use App\Models\Reservation;
 use App\Http\Requests\Reservation\AdminCreateReservationRequest;
 use App\Models\User;
 use App\Models\Table;
+use App\Http\Requests\Reservation\AdminUpdateReservation;
 
 class ReservationController extends Controller{
     public function __construct(private ReservationServiceInterface $reserveService){}
@@ -37,7 +38,7 @@ class ReservationController extends Controller{
         return new ReservationResource($this->reserveService->createReservation($validatedrequest));
     }
 
-    public function adminUpdateReservation(Reservation $reservation, AdminCreateReservationRequest $request){
+    public function adminUpdateReservation(Reservation $reservation, AdminUpdateReservation $request){
         $validatedRequest=$request->validated();
 
         return new ReservationResource($this->reserveService->UpdateReservation($reservation, $validatedRequest));
@@ -49,6 +50,11 @@ class ReservationController extends Controller{
         return response()->json([
             'message' => 'Reservation deleted successfully'
         ]);
+    }
+
+    public function completeReservation(Reservation $reservation)
+    {
+        return new ReservationResource($this->reserveService->completeReservation($reservation));
     }
 
 }

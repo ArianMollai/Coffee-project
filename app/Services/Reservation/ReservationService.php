@@ -61,7 +61,7 @@ class ReservationService implements ReservationServiceInterface
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
             'payment_expires_at' => now()->addMInutes(30),
-            'status' => 'pending',
+            'status' => $data['status'] ?? 'pending',
             'price' => $tablePrice->final_price,
         ])->load(['User', 'Table']);
     }
@@ -82,11 +82,21 @@ class ReservationService implements ReservationServiceInterface
             'starts_at' => $startsAt,
             'ends_at' => $endsAt,
             'payment_expires_at' => $reservation->payment_expires_at,
+            'status' => $data['status'] ?? $reservation->status,
             'price' => $reservation->price
         ])->load(['User', 'Table']);
     }
 
     public function DeleteReservation(Reservation $reservation){
         return $this->reserveRepository->DeleteReservation($reservation);
+    }
+
+    public function completeReservation(Reservation $reservation): Reservation
+    {
+        if($reservation->status !== 'pending'){
+            throw new Exception("Cant confirm this reservation");
+        }
+
+        return $this->reserveRepository->UpdateReservation($reservation, ['status' => 'confirmed', 'payment_expires_at' => null]);
     }
 }
