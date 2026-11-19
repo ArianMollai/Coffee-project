@@ -84,7 +84,7 @@ class ReservationPolicy
         return true;
     }
 
-    public function updateReservaation(User $user, Reservation $reservation){
+    public function updateReservation(User $user, Reservation $reservation){
         return $user->id === $reservation->user_id;
     }
 

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('unit_conversion', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('from_unit_id')->constrainded('units');
+            $table->foreignId('from_unit_id')->constrainde('units');
             $table->foreignId('to_unit_id')->constrainded('units');
             $table->decimal('multiplier', 20, 6);
             $table->timestamps();

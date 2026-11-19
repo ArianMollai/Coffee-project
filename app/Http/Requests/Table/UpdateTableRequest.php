@@ -31,7 +31,7 @@ class UpdateTableRequest extends FormRequest
             "place" => ['required', 'string'],
             "is_vip" => ["boolean"],
             'price' => ['required', 'numeric', 'min:0'],
-            'discount' => ['required', 'numeric', 'min:0', 'lte:price'],
+            'discount' => ['required', 'numeric', 'min:0', 'lte:100'],
         ];
     }
 }
