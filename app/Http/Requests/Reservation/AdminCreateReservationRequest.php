@@ -25,7 +25,8 @@ class AdminCreateReservationRequest extends FormRequest
         return [
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'table_id' => ['required', 'integer', 'exists:tables,id'],
-            'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now']
+            'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now'],
+            'status' => ['nullable', 'string', 'in:pending,confirmed,expired']
         ];
     }
 }

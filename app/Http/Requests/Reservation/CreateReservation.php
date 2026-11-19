@@ -24,7 +24,9 @@ class CreateReservation extends FormRequest
     {
         return [
             'table_id' => ['required', 'integer', 'exists:tables,id', 'min:0'],
-            'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now']
+            'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now'],
+            'status' => ['prohibited'],
+            'payment_expires_at' => ['prohibited']
         ];
     }
 }

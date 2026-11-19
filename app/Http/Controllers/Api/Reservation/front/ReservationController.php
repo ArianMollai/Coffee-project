@@ -41,4 +41,9 @@ class ReservationController extends Controller{
         ]);
     }
 
+    public function completeReservation(Reservation $reservation)
+    {
+        return new ReservationResource($this->reservationService->completeReservation($reservation));
+    }
+
 }

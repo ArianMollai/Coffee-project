@@ -12,7 +12,6 @@ Route::middleware(['jwt', 'throttle:api'])->group(function (){
     Route::put('/users/update/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/delete/{id}', [UserController::class, 'destroy'])->name('users.delete');
     Route::post('/users/logout', [AuthController::class, 'Logout']);
-    Route::post('/users/create/user', [UserController::class, 'CreateNewUser']);
 });
 
 /* *************AUTH ******************* */
