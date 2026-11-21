@@ -85,16 +85,16 @@ class ReservationPolicy
     }
 
     public function updateReservation(User $user, Reservation $reservation){
-        return $user->id === $reservation->user_id;
+        return $user->id == $reservation->user_id;
     }
 
     public function deleteReservation(User $user, Reservation $reservation){
-        return $user->id === $reservation->user_id;
+        return $user->id == $reservation->user_id;
     }
 
     public function completeReservation(User $user, Reservation $reservation): bool
     {
-        return $user->id === $reservation->user_id;
+        return $user->id == $reservation->user_id;
     }
 
     /**

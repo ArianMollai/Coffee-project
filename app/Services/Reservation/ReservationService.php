@@ -12,6 +12,7 @@ use Exception;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Table;
+use Illuminate\Support\Facades\DB;
 
 class ReservationService implements ReservationServiceInterface
 {
@@ -55,15 +56,17 @@ class ReservationService implements ReservationServiceInterface
         
         $tablePrice=$this->tableService->FindTablePrice($data['table_id']) ?? throw new ModelNotFoundException("There is no price for this table");
 
-        return $this->reserveRepository->CreateReservation([
-            'user_id' => $data['user_id'],
-            'table_id' => $data['table_id'],
-            'starts_at' => $startsAt,
-            'ends_at' => $endsAt,
-            'payment_expires_at' => now()->addMInutes(30),
-            'status' => $data['status'] ?? 'pending',
-            'price' => $tablePrice->final_price,
-        ])->load(['User', 'Table']);
+        return DB::transaction(function () use ($data, $startsAt, $endsAt, $tablePrice){
+            return $this->reserveRepository->CreateReservation([
+                'user_id' => $data['user_id'],
+                'table_id' => $data['table_id'],
+                'starts_at' => $startsAt,
+                'ends_at' => $endsAt,
+                'payment_expires_at' => now()->addMInutes(30),
+                'status' => $data['status'] ?? 'pending',
+                'price' => $tablePrice->final_price,
+            ])->load(['User', 'Table']);
+        });
     }
 
     public function UpdateReservation(Reservation $reservation, array $data): ?Reservation
@@ -76,15 +79,18 @@ class ReservationService implements ReservationServiceInterface
             throw new Exception("Selected table is reserved");
         }
 
-        return $this->reserveRepository->UpdateReservation($reservation, [
-            'user_id' => $data['user_id'],
-            'table_id' => $data['table_id'],
-            'starts_at' => $startsAt,
-            'ends_at' => $endsAt,
-            'payment_expires_at' => $reservation->payment_expires_at,
-            'status' => $data['status'] ?? $reservation->status,
-            'price' => $reservation->price
-        ])->load(['User', 'Table']);
+        return DB::transaction(function () use ($data, $startsAt, $endsAt, $reservation){
+            return $this->reserveRepository->UpdateReservation($reservation, [
+                'user_id' => $data['user_id'],
+                'table_id' => $data['table_id'],
+                'starts_at' => $startsAt,
+                'ends_at' => $endsAt,
+                'payment_expires_at' => $reservation->payment_expires_at,
+                'status' => $data['status'] ?? $reservation->status,
+                'price' => $reservation->price
+            ])->load(['User', 'Table']);
+
+        });
     }
 
     public function DeleteReservation(Reservation $reservation){
