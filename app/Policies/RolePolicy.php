@@ -13,11 +13,7 @@ class RolePolicy
      */
     public function viewRoles(User $user): bool
     {
-        if($user->level==="creator"){
-            return true;
-        }
-
-        return $user->HasPermission('view-roles');
+        return $user->level === "creator";
     }
 
 /*     /**
@@ -25,11 +21,7 @@ class RolePolicy
      */
     public function view(User $user): bool
     {
-        if($user->level==="creator"){
-            return true;
-        }
-
-        return $user->HasPermission('view-roles');
+        return $user->level === "creator";
     }
 
     /**
@@ -37,11 +29,7 @@ class RolePolicy
      */
     public function create(User $user): bool
     {
-        if($user->level==="creator"){
-            return true;
-        }
-
-        return $user->HasPermission('create-roles');
+        return $user->level === "creator";
     }
 
     /**
@@ -49,11 +37,7 @@ class RolePolicy
      */
     public function update(User $user): bool
     {
-        if($user->level==="creator"){
-            return true;
-        }
-
-        return $user->HasPermission("update-roles");
+        return $user->level === "creator";
     }
 
     /**
@@ -61,17 +45,11 @@ class RolePolicy
      */
     public function delete(User $user): bool
     {
-        if($user->level==="creator"){
-            return true;
-        }
-
-        return $user->HasPermission('delete-roles');
+        return $user->level === "creator";
     }
 
     public function AssignRoles(User $user){
-        if($user->level==="creator"){
-            return true;
-        }
+        return $user->level === "creator";
     }
 
     /**

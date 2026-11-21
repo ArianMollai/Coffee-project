@@ -93,11 +93,7 @@ class UserPolicy
             return false;
         }
 
-        if($user->level==="creator"){
-            return true;
-        }
-
-        return $user->hasPermission('assign-roles');
+        return $user->level==="creator"; 
     }
 
     /**
@@ -122,10 +118,6 @@ class UserPolicy
             return false;
         }
 
-        if($user->level === "creator"){
-            return true;
-        }
-
-        return $user->hasPermission('update-level');
+        return $user->level === "creator";
     }
 }
