@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->foreignId('base_unit_id')->constrained('units');
-            $table->decimal('quantity', 12, 3)->default(0);
-            $table->decimal('low_stock_treshhold', 12, 3);
+            $table->decimal('quantity', 15, 3)->default(0);
+            $table->decimal('low_stock_treshhold', 15, 3);
             $table->timestamps();
         });
     }
