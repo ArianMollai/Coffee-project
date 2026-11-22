@@ -24,7 +24,7 @@ class UpdateIngridientPurchase extends FormRequest
     {
         return [
             'unit_id' => ['required', 'integer', 'exists:units,id'],
-            'quantity' => ['numeric'],
+            'quantity' => ['numeric', 'min:0'],
         ];
     }
 }
