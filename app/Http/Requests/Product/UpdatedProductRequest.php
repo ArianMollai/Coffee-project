@@ -35,7 +35,7 @@ class UpdatedProductRequest extends FormRequest
             'prices' => ['required', 'array', 'min:1'],
             'prices.*.id' => ['nullable', 'integer', 'exists:prices,id'],
             'prices.*.price' => ['required', 'numeric', 'min:0'],
-            'prices.*.discount' => ['sometimes', 'numeric', 'min:0'],
+            'prices.*.discount' => ['sometimes', 'numeric', 'min:0', 'lte:100'],
             'prices.*.inventory' => ['required', 'integer', 'min:0'],
 
             'prices.*.ingridients' => ['required', 'array'],
