@@ -39,6 +39,17 @@ class UnitConversionController extends Controller
       return new UnitConversionResource($this->unitConversionService->FindConversionByUnits($fromUnitId, $toUnitId));
    }
 
+   public function viewDirectAndReverseConversion(ViewUnitConversionRequest $request){
+      $this->authorize('view', Unit::class);
+
+      $validatedRequest=$request->validated();
+
+      $fromUnitId=$validatedRequest['from_unit_id'];
+      $toUnitId=$validatedRequest['to_unit_id'];
+
+      return new UnitConversionResource($this->unitConversionService->viewDirectAndReverseConversion($fromUnitId, $toUnitId));
+   }
+
    public function CreateConversion(CreateUnitConversionRequest $request){
       $this->authorize('create', Unit::class);
 

@@ -55,6 +55,7 @@ Route::middleware(['jwt', 'throttle:api'])->group(function (){
     Route::get('/admin/unit/conversions', [UnitConversionController::class, 'ViewUnitConversions']);
     Route::get('/admin/unit/conversions/byunit', [UnitConversionController::class, 'ViewConversionByUnits']);
     Route::get('/admin/unit/conversions/{unitconversion_id}', [UnitConversionController::class, 'ViewConversion']);
+    Route::get('/admin/unit/conversions/direct/reverse', [UnitConversionController::class, 'viewDirectAndReverseConversion']);
     Route::post('/admin/unit/conversions/create', [UnitConversionController::class, 'CreateConversion']);
     Route::put('/admin/unit/conversions/update/{unitconversion_id}', [UnitConversionController::class, 'UpdateConversion']);
     Route::delete('/admin/unit/conversions/delete/{unitconversion_id}', [UnitConversionController::class, 'DeleteUnitConversion']);
