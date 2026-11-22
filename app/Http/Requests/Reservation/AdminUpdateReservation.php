@@ -26,7 +26,7 @@ class AdminUpdateReservation extends FormRequest
             'user_id' => ['required', 'integer', 'exists:users,id', 'min:0'],
             'table_id' => ['required', 'integer', 'exists:tables,id', 'min:0'],
             'starts_at' => ['required', 'date-format:Y-m-d H:i:s', 'after:now'],
-            'status' => ['required', 'string', 'in:pending,confimed,expired']
+            'status' => ['nullable', 'string', 'in:pending,confimed,expired']
         ];
     }
 }

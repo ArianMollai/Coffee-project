@@ -79,7 +79,9 @@ class ReservationService implements ReservationServiceInterface
             throw new Exception("Selected table is reserved");
         }
 
-        return DB::transaction(function () use ($data, $startsAt, $endsAt, $reservation){
+        $tablePrice=$this->tableService->FindTablePrice($data['table_id']) ?? throw new ModelNotFoundException("There is no price for this table");
+
+        return DB::transaction(function () use ($data, $startsAt, $endsAt, $reservation, $tablePrice){
             return $this->reserveRepository->UpdateReservation($reservation, [
                 'user_id' => $data['user_id'],
                 'table_id' => $data['table_id'],
@@ -87,7 +89,7 @@ class ReservationService implements ReservationServiceInterface
                 'ends_at' => $endsAt,
                 'payment_expires_at' => $reservation->payment_expires_at,
                 'status' => $data['status'] ?? $reservation->status,
-                'price' => $reservation->price
+                'price' => $tablePrice->final_price
             ])->load(['User', 'Table']);
 
         });
