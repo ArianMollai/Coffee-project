@@ -31,6 +31,18 @@ class UnitConversionService implements UnitConversionServiceInterface
         return $direct=$this->UnitConversionRepository->FindConversionByUnits($fromUnit, $toUnit);
     }
 
+    public function viewDirectAndReverseConversion(int $fromUnit, int $toUnit): ?UnitConversion
+    {
+        $direct=$this->UnitConversionRepository->FindConversionByUnits($fromUnit, $toUnit);
+        if($direct){
+            return $direct;
+        }
+
+        $reverse=$this->UnitConversionRepository->FindConversionByUnits($toUnit, $fromUnit);
+
+        return $reverse ?? throw new ModelNotFoundException("Conversion not found");
+    }
+
     public function CreateConversion(array $data): UnitConversion
     {
         return $this->UnitConversionRepository->CreateConversion($data);
