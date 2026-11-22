@@ -26,7 +26,7 @@ class CreateIngridientRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:256', Rule::unique('ingridients')],
             'base_unit_id' => ['required', 'integer', 'exists:units,id'],
-            'quantity' => ['nullable', 'numeric'],
+            'quantity' => ['nullable', 'numeric', 'min:0'],
             'low_stock_treshhold' => ['required', 'numeric']
         ];
     }

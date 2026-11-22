@@ -32,7 +32,7 @@ class CreateIngridientPurchaseRequest extends FormRequest
         return [
             'ingridient_id' => ['required', 'exists:ingridients,id'],
             'unit_id' => ['required', 'integer', 'exists:units,id'],
-            'quantity' => ['numeric'],
+            'quantity' => ['numeric', 'min:0'],
         ];
     }
 }
