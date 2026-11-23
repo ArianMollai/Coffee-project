@@ -26,7 +26,7 @@ class UpdateTableRequest extends FormRequest
         $id=$this->route('id');
 
         return [
-            "number" => ['required', 'integer', Rule::unique('tables')],
+            "number" => ['required', 'integer', Rule::unique('tables')->ignore($id)],
             "capacity" => ['required', 'integer'],
             "place" => ['required', 'string'],
             "is_vip" => ["boolean"],
