@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use App\Events\UserRegistered;
+use Illuminate\Support\Facades\Hash;
 
 class UserServices implements UserServiceInterface
 {
@@ -41,7 +42,7 @@ class UserServices implements UserServiceInterface
         return $user;
     }
 
-    public function update(int $id, array $data): User
+    public function update(int $id, array $data): ?User
     {
         $user=$this->get($id) ?? throw new ModelNotFoundException('User not found');
 
@@ -98,6 +99,17 @@ class UserServices implements UserServiceInterface
         $level=$user->Roles()->exists() ? 'admin' : 'user';
 
         return $this->user->update($user, ['level' => $level]);
+    }
+
+    public function updatePassword(int $id, array $data): ?User
+    {
+        $user=$this->get($id) ?? throw new ModelNotFoundException('User not found');
+
+        if(!Hash::check($data['old_password'], $user->password)){
+            throw new Exception("Current password is incorrect");
+        }
+
+        return $this->user->update($user, ['password' => Hash::make($data['new_password'])]);
     }
 }
 

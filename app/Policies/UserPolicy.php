@@ -120,4 +120,17 @@ class UserPolicy
 
         return $user->level === "creator";
     }
+
+    public function updatePassword(User $user, User $model): bool
+    {
+        if($model->level === "creator"){
+            return false;
+        }
+
+        if($user->level === "creator" || $user->id === $model->id){
+            return true;
+        }
+
+        return $user->HasPermission('update-users');
+    }
 }

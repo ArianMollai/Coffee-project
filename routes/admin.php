@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\UserController;
 
 Route::middleware(['jwt', 'throttle:api'])->group(function (){
     Route::post('/admin/users/create/user', [UserController::class, 'CreateNewUser']);
+    Route::put('/admin/users/update/password/{user_id}', [UserController::class, 'updatePassword']);
 
     Route::get('/admin/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::post('/admin/roles/create', [RoleController::class, 'create'])->name('roles.create');
