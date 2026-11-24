@@ -7,9 +7,10 @@ use App\Services\Users\Contracts\UserServiceInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
-use Tymon\JWTAuth\Facades\JWTAuth; 
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use App\Events\UserRegistered;
 
 class UserServices implements UserServiceInterface
 {
@@ -31,7 +32,13 @@ class UserServices implements UserServiceInterface
 
     public function Create(array $data): User
     {
-        return $this->user->Create($data);
+        $data['password'] = bcrypt($data['password']);
+
+        $user=$this->user->Create($data);
+
+        event(new UserRegistered($user));
+
+        return $user;
     }
 
     public function update(int $id, array $data): User
