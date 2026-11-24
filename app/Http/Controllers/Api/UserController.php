@@ -11,6 +11,7 @@ use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Support\Facades\Gate;
 use App\Http\Requests\User\CreateNewUserRequest;
 use App\Models\Role;
+use App\Http\Requests\User\UpdatePasswordRequest;
 
 class UserController extends Controller
 {
@@ -89,5 +90,18 @@ class UserController extends Controller
         }
 
         return new UserResource($this->service->CreateNewUser($request->validated()));
+    }
+
+    public function updatePassword(int $id, UpdatePasswordRequest $request)
+    {
+        $user=$this->service->get($id);
+
+        $this->authorize('updatePassword', $user, User::class);
+
+        $this->service->updatePassword($id, $request->validated());
+
+        return response()->json([
+            'message' => 'Password updated successfully'
+        ]);
     }
 }
