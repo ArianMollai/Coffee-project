@@ -19,19 +19,14 @@ class Table extends Model
         static::creating(function ($table){
             $table->uuid=(string) Str::uuid();
 
-            $url=url('/menu/{$table->uuid}');
+            $url=url("/menu/{$table->uuid}");
 
             $svg=QrCode::format('svg')->size(300)->generate($url);
 
-            $table->qr_code= 'data:image/svg+xml;base64'. base64_encode($svg);
+            $table->qr_code= 'data:image/svg+xml;base64,'. base64_encode($svg);
             
         });
     }
-
-/*     public function Product(){
-        return $this->belongsTo(Product::class, 'product_id');
-    }
- */
 
     public function Prices(){
         return $this->hasOne(Price::class);
